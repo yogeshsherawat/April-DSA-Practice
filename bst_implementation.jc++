@@ -1,0 +1,106 @@
+package com.company;
+
+
+import sun.awt.image.ImageWatched;
+
+import java.io.*;
+import java.util.*;
+
+class Node{
+    int data,height;
+    Node left,right;
+    Node(int data,int height){
+        this.data=data;
+        this.height=height;
+        left = null;
+        right = null;
+    }
+    Node(int data){
+        this.data = data;
+        left = null;
+        right  = null;
+    }
+
+}
+
+public class Main {
+
+    static Node insert(Node node,int data){
+        if(node==null)
+            return new Node(data);
+        if(data<node.data)
+            node.left =  insert(node.left,data);
+        else if(data>node.data)
+            node.right = insert(node.right,data);
+        else
+            node = null;
+
+        return node;
+    }
+    static Node delete(Node node,int key){
+        if(node==null)
+            return node;
+        if(node.data>key)
+            node.left = delete(node.left,key);
+        else if(node.data<key)
+            node.right = delete(node.right,key);
+        else{
+            if(node.left==null)
+                return node.right;
+            else if(node.right==null)
+                return node.left;
+            node.data = inorderSuccessor(node.right);
+            node.right = delete(node.right,key);
+        }
+        return node;
+    }
+
+    private static int inorderSuccessor(Node node) {
+        if(node.left==null)
+            return node.data;
+        return inorderSuccessor(node.left);
+    }
+
+    static void inorder(Node node){
+        if(node==null)
+            return;
+        inorder(node.left);
+        System.out.print(node.data+" ");
+        inorder(node.right);
+    }
+    static void bfs(Node node){
+        Queue<Node> q= new LinkedList<>();
+        q.add(node);
+        while(!q.isEmpty()){
+            Node n = q.poll();
+            System.out.print(n.data+" ");
+            if(n.left!=null)
+                q.add(n.left);
+            if(n.right!=null)
+                q.add(n.right);
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+
+        Node root = new Node(3,0);
+        root.left = new Node(1);
+        root.left.right = new Node(2);
+        root.right = new Node(4);
+        root.right.right = new Node(5);
+        inorder(root);
+        System.out.println();
+        bfs(root);
+
+        delete(root,2);
+        System.out.println();
+        System.out.println("After Deletion:");
+        bfs(root);
+
+
+
+
+
+    }
+
+}
